@@ -1,2 +1,39 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>tbaMUD — Web Portal</title><style>body{margin:0;background:#081018;color:#d9e5ef;font:16px system-ui}main{max-width:900px;margin:8vh auto;padding:32px}h1{color:#d6ad6a}pre{background:#101a24;padding:20px;border-radius:8px;overflow:auto}a{color:#8fc5ff}</style></head><body><main><h1>tbaMUD Web Portal</h1><p>tbaMUD is a C-based MUD server. GitHub Pages provides this browser portal; the native game server runs separately.</p><h2>Server connection</h2><pre>Host: Configure your deployed tbaMUD server
-Port: 4000 (example)</pre><p>For the full server source and build instructions, visit <a href="https://github.com/ArkansasIo/tbamud">the tbaMUD repository</a>.</p></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>tbaMUD — Server Portal</title>
+<style>
+:root{color-scheme:dark}body{margin:0;background:#081018;color:#d9e5ef;font:16px system-ui,sans-serif}
+main{max-width:900px;margin:8vh auto;padding:32px}h1{color:#d6ad6a}
+.card{background:#101a24;border:1px solid #263849;border-radius:10px;padding:20px;margin:20px 0}
+code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+a{color:#8fc5ff}.value{font-weight:700}
+</style>
+</head>
+<body>
+<main>
+<h1>tbaMUD Web Portal</h1>
+<p>This GitHub Pages site is the web portal for the tbaMUD server. The MUD itself runs as a separate TCP service.</p>
+<div class="card">
+<h2>Server configuration</h2>
+<p>Host: <span class="value" id="host">localhost</span></p>
+<p>Port: <span class="value">4000</span></p>
+<p>Protocol: <span class="value">Telnet / TCP</span></p>
+<p id="connection">Use a Telnet/MUD client to connect to the host above on port 4000.</p>
+</div>
+<div class="card">
+<h2>Important</h2>
+<p>GitHub Pages can serve this portal, but it cannot run the C-based tbaMUD server or make a raw TCP connection from browser JavaScript. Deploy the tbaMUD server separately and expose TCP port 4000.</p>
+</div>
+<p><a href="https://github.com/ArkansasIo/tbamud">View the tbaMUD source on GitHub</a></p>
+<script>
+const host = window.location.hostname || "localhost";
+document.getElementById("host").textContent = host;
+document.getElementById("connection").textContent =
+  "Connect your Telnet/MUD client to " + host + ":4000.";
+</script>
+</main>
+</body>
+</html>
