@@ -3,37 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>tbaMUD — Server Portal</title>
+<title>tbaMUD — Command Shell</title>
 <style>
-:root{color-scheme:dark}body{margin:0;background:#081018;color:#d9e5ef;font:16px system-ui,sans-serif}
-main{max-width:900px;margin:8vh auto;padding:32px}h1{color:#d6ad6a}
-.card{background:#101a24;border:1px solid #263849;border-radius:10px;padding:20px;margin:20px 0}
-code,pre{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
-a{color:#8fc5ff}.value{font-weight:700}
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#060b10;color:#d9e5ef;font:15px ui-monospace,SFMono-Regular,Consolas,monospace}
+main{max-width:1100px;margin:4vh auto;padding:20px}.top{display:flex;justify-content:space-between;gap:15px;align-items:center}
+h1{color:#d6ad6a;font-family:system-ui,sans-serif}.status{padding:7px 12px;border:1px solid #385064;border-radius:999px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#d6ad6a;margin-right:7px}
+.shell{background:#020507;border:1px solid #263849;border-radius:10px;overflow:hidden;box-shadow:0 12px 40px #0008}.bar{padding:10px 14px;background:#101a24;color:#9eb2c3}.output{height:58vh;min-height:360px;overflow:auto;padding:18px;white-space:pre-wrap}.line{margin:0 0 8px}.prompt{color:#d6ad6a}.system{color:#91a8ba}.error{color:#e58d8d}.inputbar{display:flex;border-top:1px solid #263849}.inputbar span{padding:15px 12px;color:#d6ad6a}.inputbar input{flex:1;background:transparent;border:0;outline:0;color:#fff;padding:15px 0;font:inherit}
+button{background:#172532;color:#d9e5ef;border:1px solid #385064;padding:8px 12px;border-radius:6px;cursor:pointer}button:hover{background:#203446}.buttons{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
+small{color:#8093a3}a{color:#8fc5ff}
 </style>
 </head>
 <body>
 <main>
-<h1>tbaMUD Web Portal</h1>
-<p>This GitHub Pages site is the web portal for the tbaMUD server. The MUD itself runs as a separate TCP service.</p>
-<div class="card">
-<h2>Server configuration</h2>
-<p>Host: <span class="value" id="host">localhost</span></p>
-<p>Port: <span class="value">4000</span></p>
-<p>Protocol: <span class="value">Telnet / TCP</span></p>
-<p id="connection">Use a Telnet/MUD client to connect to the host above on port 4000.</p>
+<div class="top"><h1>tbaMUD Command Shell</h1><div class="status"><span class="dot"></span><span id="status">Portal online</span></div></div>
+<div class="buttons">
+<button data-cmd="help">help</button><button data-cmd="look">look</button><button data-cmd="who">who</button><button data-cmd="score">score</button><button data-cmd="quit">quit</button>
 </div>
-<div class="card">
-<h2>Important</h2>
-<p>GitHub Pages can serve this portal, but it cannot run the C-based tbaMUD server or make a raw TCP connection from browser JavaScript. Deploy the tbaMUD server separately and expose TCP port 4000.</p>
+<div class="shell">
+<div class="bar">tbaMUD terminal • TCP server port 4000</div>
+<div id="output" class="output"></div>
+<form id="form" class="inputbar"><span>tbaMUD&gt;</span><input id="command" autocomplete="off" autofocus aria-label="tbaMUD command"></form>
 </div>
-<p><a href="https://github.com/ArkansasIo/tbamud">View the tbaMUD source on GitHub</a></p>
-<script>
-const host = window.location.hostname || "localhost";
-document.getElementById("host").textContent = host;
-document.getElementById("connection").textContent =
-  "Connect your Telnet/MUD client to " + host + ":4000.";
-</script>
+<p><small>Browser note: GitHub Pages cannot open a raw TCP/Telnet socket. This shell is the command UI; a WebSocket/HTTP bridge must be deployed beside the tbaMUD server for live browser play.</small></p>
+<p><a href="https://github.com/ArkansasIo/tbamud">tbaMUD source</a></p>
 </main>
+<script>
+const output=document.getElementById("output"), input=document.getElementById("command"), status=document.getElementById("status");
+function print(text,cls="system"){const p=document.createElement("div");p.className="line "+cls;p.textContent=text;output.appendChild(p);output.scrollTop=output.scrollHeight}
+const help="Commands: help, look, who, score, inventory, equipment, say <message>, north, south, east, west, quit";
+print("tbaMUD Command Shell");
+print("Portal UI ready. Server: "+location.hostname+"  Port: 4000");
+print("Type help for available commands.");
+function run(cmd){
+  cmd=cmd.trim(); if(!cmd)return;
+  print("tbaMUD> "+cmd,"prompt");
+  const base=cmd.toLowerCase().split(/\s+/)[0];
+  if(base==="help"){print(help)}
+  else if(base==="look"){print("The browser shell is ready. Live room data will appear when a WebSocket/HTTP bridge is connected.")}
+  else if(base==="who"){print("Player list unavailable until the live server bridge is connected.")}
+  else if(base==="score"){print("Character score unavailable until authenticated server access is connected.")}
+  else if(base==="quit"){print("Shell session closed.")}
+  else if(["inventory","equipment","say","north","south","east","west"].includes(base)){print("Command accepted by UI; live execution requires the server bridge.")}
+  else {print("Unknown command. Type help.","error")}
+}
+document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();run(input.value);input.value=""});
+document.querySelectorAll("button").forEach(b=>b.onclick=()=>{run(b.dataset.cmd);input.focus()});
+</script>
 </body>
 </html>
