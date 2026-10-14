@@ -15,7 +15,7 @@ services:
         {
           "tbamud": {
             "host": "${TBAMUD_HOST}",
-            "port": "4000",
+            "port": 4000,
             "encoding": "utf8"
           }
         }
