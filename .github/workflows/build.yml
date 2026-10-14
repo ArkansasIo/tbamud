@@ -26,6 +26,9 @@ jobs:
     - name: test
       working-directory: tests
       run: make test
+    - name: test standalone RPG modules
+      working-directory: modules/rpg
+      run: make test
     - name: publish test results
       uses: dorny/test-reporter@v1
       if: always()
