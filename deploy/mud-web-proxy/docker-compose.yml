@@ -1,0 +1,25 @@
+services:
+  mud-web-proxy:
+    image: ghcr.io/maldorne/mud-web-proxy:latest
+    container_name: tbamud-web-proxy
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      WS_PORT: "6200"
+      TLS_ENABLED: "false"
+      COMPRESS: "true"
+      ENABLE_LEGACY_ROUTING: "false"
+      ALLOWED_ORIGINS: "https://arkansasio.github.io"
+      DEFAULT_ENCODING: "utf8"
+      MUD_ROUTES: |-
+        {
+          "tbamud": {
+            "host": "${TBAMUD_HOST}",
+            "port": "4000",
+            "encoding": "utf8"
+          }
+        }
+    ports:
+      - "127.0.0.1:6200:6200"
+    env_file:
+      - .env
